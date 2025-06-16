@@ -3,10 +3,10 @@ services:
     name: real-estate-bot
     runtime: python
     buildCommand: |
-      pip install -r requirements.txt
+      poetry install --no-interaction --no-ansi
       python -m app.database
     startCommand: |
-      gunicorn app.main:app \
+      poetry run gunicorn app.main:app \
       --workers 1 \
       --threads 4 \
       --worker-class uvicorn.workers.UvicornWorker \
@@ -20,4 +20,3 @@ services:
           name: real-estate-db
           property: connectionString
     plan: free
-    healthCheckPath: /health
