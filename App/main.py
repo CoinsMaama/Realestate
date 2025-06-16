@@ -7,11 +7,13 @@ from telegram.ext import (
     CallbackQueryHandler,
     MessageHandler,
     filters,
-    CallbackContext
+    CallbackContext,
+    ApplicationBuilder
 )
 from app.database import get_db_session, User
 from app.payments import create_razorpay_order
 from app.translations import get_translation
+from app.handlers import setup_handlers
 
 # Configure logging
 logging.basicConfig(
@@ -19,6 +21,23 @@ logging.basicConfig(
     level=logging.INFO
 )
 logger = logging.getLogger(__name__)
+
+def create_app():
+    """Factory function to create the Telegram application"""
+    application = ApplicationBuilder() \
+        .token(os.getenv("TELEGRAM_TOKEN")) \
+        .post_init(post_init) \
+        .build()
+    
+    setup_handlers(application)
+    return application
+
+def post_init(app):
+    """Runs after bot initialization"""
+    print("Bot is ready!")
+
+# Gunicorn will look for this
+app = create_app()
 
 # Command handlers
 async def start(update: Update, context: CallbackContext) -> None:
