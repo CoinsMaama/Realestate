@@ -113,7 +113,7 @@ async def handle_payment(update: Update, context: CallbackContext) -> None:
 
 def main() -> None:
     # Create the Application
-    application = Application.builder().token(os.getenv("TELEGRAM_TOKEN")).build()
+    app = Application.builder().token(os.getenv("TELEGRAM_TOKEN")).build()
     
     # Register handlers
     application.add_handler(CommandHandler("start", start))
