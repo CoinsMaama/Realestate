@@ -7,13 +7,16 @@ from telegram.ext import (
     CallbackQueryHandler,
     MessageHandler,
     filters,
-    CallbackContext,
-    ApplicationBuilder
+    CallbackContext
 )
 from app.database import get_db_session, User
 from app.payments import create_razorpay_order
 from app.translations import get_translation
 from app.handlers import setup_handlers
+
+# Correct import style for Poetry
+from telegram.ext import ApplicationBuilder
+#from app.handlers import setup_handlers
 
 # Configure logging
 logging.basicConfig(
