@@ -1,5 +1,5 @@
 services:
-  - type: web  # Must use "web" for free tier
+  - type: web
     name: real-estate-bot
     runtime: python
     buildCommand: pip install -r requirements.txt
@@ -16,7 +16,7 @@ services:
           name: real-estate-db
           property: connectionString
     plan: free
-    healthCheckPath: /health  # Required for web services
+    healthCheckPath: /health
 
 databases:
   - name: real-estate-db
