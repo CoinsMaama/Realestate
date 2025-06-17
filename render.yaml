@@ -2,15 +2,8 @@ services:
   - type: web
     name: real-estate-bot
     runtime: python
-    buildCommand: |
-      poetry install --no-interaction --no-ansi
-      python -m app.database
-    startCommand: |
-      poetry run gunicorn app.main:app \
-      --workers 1 \
-      --threads 4 \
-      --bind 0.0.0.0:10000 \
-      --timeout 120
+    buildCommand: poetry install --no-interaction --no-ansi
+    startCommand: poetry run gunicorn app.main:app --workers 1 --threads 4 --bind 0.0.0.0:10000 --timeout 120
     envVars:
       - key: TELEGRAM_TOKEN
         type: secret
