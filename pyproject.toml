@@ -1,7 +1,6 @@
 [tool.poetry]
 name = "Realestate"
 version = "0.1.0"
-description = "Real Estate Telegram Bot"
 package-mode = false
 
 [tool.poetry.dependencies]
