@@ -1,5 +1,5 @@
 services:
-  - type: worker  # Must be worker, not web!
+  - type: background_worker  # ← This is the new correct type
     name: real-estate-bot
     runtime: python
     buildCommand: pip install -r requirements.txt
