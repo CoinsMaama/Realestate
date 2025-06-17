@@ -5,5 +5,6 @@ razorpay
 gunicorn
 uvicorn
 fastapi
+flask
 sqlalchemy
 python-multipart
