@@ -1,21 +1,27 @@
 import os
 import logging
+from threading import Thread
 from telegram import Update
-from telegram.ext import (
-    Application,
-    CommandHandler,
-    CallbackContext
-)
+from telegram.ext import Application, CommandHandler, CallbackContext
+from flask import Flask
 import database
 import payments
 
-# Setup logging
+# Initialize Flask app for health checks
+flask_app = Flask(__name__)
+
+@flask_app.route('/health')
+def health():
+    return "OK", 200
+
+# Configure logging
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     level=logging.INFO
 )
 logger = logging.getLogger(__name__)
 
+# Telegram bot commands
 async def start(update: Update, context: CallbackContext):
     await update.message.reply_text(
         "🏠 Welcome to Real Estate Bot!\n"
@@ -41,20 +47,29 @@ async def register_viewer(update: Update, context: CallbackContext):
         "Use /browse to see available properties"
     )
 
-def main():
-    # Create bot application
+def run_bot():
+    """Run the Telegram bot in background"""
     application = Application.builder() \
         .token(os.getenv("TELEGRAM_TOKEN")) \
         .build()
     
-    # Register handlers
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("lister", register_lister))
     application.add_handler(CommandHandler("viewer", register_viewer))
     
-    # Start polling
     application.run_polling()
 
 if __name__ == "__main__":
-    database.init_db()  # Initialize database
-    main()
+    # Initialize database
+    database.init_db()
+    
+    # Start bot in background thread
+    bot_thread = Thread(target=run_bot)
+    bot_thread.daemon = True
+    bot_thread.start()
+    
+    # Start Flask app (for health checks)
+    flask_app.run(host='0.0.0.0', port=int(os.getenv("PORT", 5000)))
+
+# Gunicorn will look for this
+app = flask_app
