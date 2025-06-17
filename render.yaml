@@ -1,11 +1,12 @@
 services:
   - type: web
-    name: real-estate-bot
+    name: Realestate
     runtime: python
-    buildCommand: poetry install --no-interaction --no-ansi
-    python -m app.database
+    buildCommand: |
+      poetry install --no-interaction --no-ansi --no-root
+      python -m App.database
     startCommand: |
-      poetry run gunicorn app.main:app \
+      poetry run gunicorn App.main:app \
       --workers 1 \
       --threads 4 \
       --bind 0.0.0.0:10000 \
@@ -15,6 +16,12 @@ services:
         type: secret
       - key: DATABASE_URL
         fromDatabase:
-          name: real-estate-db
+          name: Realestate-db
           property: connectionString
+    plan: free
+
+databases:
+  - name: Realestate-db
+    databaseName: Realestate_db
+    user: Realestate_user
     plan: free
