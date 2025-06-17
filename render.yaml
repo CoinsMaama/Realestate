@@ -1,27 +1,22 @@
 services:
-  - type: web
-    name: Realestate
+  - type: worker  # Must be worker, not web!
+    name: real-estate-bot
     runtime: python
-    buildCommand: |
-      poetry install --no-interaction --no-ansi --no-root
-      python -m App.database
-    startCommand: |
-      poetry run gunicorn App.main:app \
-      --workers 1 \
-      --threads 4 \
-      --bind 0.0.0.0:10000 \
-      --timeout 120
+    buildCommand: pip install -r requirements.txt
+    startCommand: python main.py
     envVars:
       - key: TELEGRAM_TOKEN
         type: secret
+      - key: RAZORPAY_KEY
+        type: secret
+      - key: RAZORPAY_SECRET
+        type: secret
       - key: DATABASE_URL
         fromDatabase:
-          name: Realestate-db
+          name: real-estate-db
           property: connectionString
     plan: free
 
 databases:
-  - name: Realestate-db
-    databaseName: Realestate_db
-    user: Realestate_user
+  - name: real-estate-db
     plan: free
